@@ -12,13 +12,19 @@ import { MatTreeModule } from '@angular/material/tree';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { HeaderComponent } from './components/header/header.component';
+import { ChatBoxComponent } from './components/chat-box/chat-box.component';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
+import { HttpClientModule } from '@angular/common/http';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [
     AppComponent,
     CodeEditorComponent,
     FileNavigatorComponent,
-    HeaderComponent
+    HeaderComponent,
+    ChatBoxComponent
   ],
   imports: [
     BrowserModule,
@@ -28,7 +34,11 @@ import { HeaderComponent } from './components/header/header.component';
     BrowserAnimationsModule,
     MatTreeModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatCardModule,
+    MatDividerModule,
+    HttpClientModule,
+    MatInputModule
   ],
   providers: [],
   bootstrap: [AppComponent]

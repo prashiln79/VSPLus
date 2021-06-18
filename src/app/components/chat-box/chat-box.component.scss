@@ -1,0 +1,25 @@
+.chat-box--body{
+    background-color: #373738;
+    height: 40vh;
+    margin-top: 10px;
+    padding-top: 5px;
+}
+
+.example-header-image {
+    background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+    background-size: cover;
+}
+
+mat-card{
+    padding: 5px;
+    background-color: #49494c;
+    margin: 0 5px;
+}
+
+.mat-card-header-text{
+    width: 100%;
+}
+
+.mat-card-subtitle{
+    margin-bottom: 0;
+}
