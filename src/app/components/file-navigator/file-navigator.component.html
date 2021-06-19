@@ -1,8 +1,6 @@
-<div class="search-bar">
-<input id="go" type="test" placeholder="URL">
-<button>GO</button>
-</div>
+
 <div class="parent">
+  <input id='url' [(ngModel)]="url" type="text" (keyup.enter)="search()" placeholder="Github URL">
 <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree">
     <!-- This is the tree node template for leaf nodes -->
     <!-- There is inline padding applied to this node using styles.

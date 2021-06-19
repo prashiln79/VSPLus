@@ -54,14 +54,12 @@ const TREE_DATA: FoodNode[] = [
 })
 export class FileNavigatorComponent implements OnInit {
 
+  public url:string = 'https://github.com/prashiln79/TAU';  
   treeControl = new NestedTreeControl<FoodNode>(node => node.children);
   dataSource = new MatTreeNestedDataSource<FoodNode>();
   tree: any = [];
 
   constructor(public httpClient: HttpClient) {
-    //this.dataSource.data = TREE_DATA;
-    //https://api.github.com/repos/prashiln79/TAU/commits
-    //https://api.github.com/repos/prashiln79/TAU/git/trees/940d3b7985a75db33ad4662fce1f82d1d7cfd577
   }
 
   hasChild = (_: number, node: FoodNode) => !!node.children && node.children.length > 0;
@@ -233,6 +231,10 @@ this.dataSource.data = data;
       console.log(this.tree);
     });
 
+  }
+
+  search(){
+      console.log(this.url)
   }
 
 

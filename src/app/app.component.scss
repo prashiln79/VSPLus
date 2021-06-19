@@ -14,9 +14,13 @@ section{
 }
 
 nav{
-background-color: green;
+    background-color: #373738;
 }
 
 .area{
     display: contents;
+}
+
+app-code-editor{
+    z-index: 1;
 }

@@ -7,11 +7,17 @@
     background-color: #373738;
     height: 60vh;
     padding: 10px;
-    width: 100%;
+    width: 97%;
     height: 100%;
     overflow-y: scroll;
     padding-right: 17px;
     box-sizing: content-box;
+    font-family: Consolas, "Courier New", monospace;
+    font-weight: normal;
+    font-size: 14px;
+    font-feature-settings: "liga" 0, "calt" 0;
+    line-height: 19px;
+    letter-spacing: 0px;
   }
 
   .mat-tree-node{
@@ -61,26 +67,10 @@
 
   .mat-icon {
     font-size: 18px;
-    color: yellow;
+    color: #37aaf2;
   }
   
-  .search-bar{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    background-color: #373738;
-  }
-
-  #go{
-    width: 80%;
-    margin: 3px;
-    border-radius: 5px;
-  }
-
-  .search-bar button{
-    margin: 3px 2px;
-    width: 37px;
-    font-size: 10px;
+  #url{
+    width: 97%;
     border-radius: 6px;
-    height: 25px;
   }

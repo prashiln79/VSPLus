@@ -17,6 +17,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { HttpClientModule } from '@angular/common/http';
 import { MatInputModule } from '@angular/material/input';
+import { FloatingCtrlComponent } from './components/floating-ctrl/floating-ctrl.component';
+import { TerminalComponent } from './components/terminal/terminal.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,9 @@ import { MatInputModule } from '@angular/material/input';
     CodeEditorComponent,
     FileNavigatorComponent,
     HeaderComponent,
-    ChatBoxComponent
+    ChatBoxComponent,
+    FloatingCtrlComponent,
+    TerminalComponent
   ],
   imports: [
     BrowserModule,

@@ -1,8 +1,8 @@
 .chat-box--body{
-    background-color: #373738;
+    background-color: #3d3d40;
     height: 40vh;
     margin-top: 10px;
-    padding-top: 5px;
+    padding: 8px 15px;
 }
 
 .example-header-image {
@@ -10,10 +10,11 @@
     background-size: cover;
 }
 
-mat-card{
+.people{
     padding: 5px;
-    background-color: #49494c;
     margin: 0 5px;
+    display: flex;
+    height: fit-content;
 }
 
 .mat-card-header-text{
@@ -23,3 +24,83 @@ mat-card{
 .mat-card-subtitle{
     margin-bottom: 0;
 }
+
+.mat-card-avatar{
+    height: 30px;
+    width: 30px;
+    margin-left: -10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    object-fit: cover;
+}
+
+mat-icon{
+    font-size: 26px;
+    margin: 0 2px;
+    color: aliceblue;
+    background-color: #80808045;
+    width: 26px;
+    height: 26px;
+    border-radius: 4px;
+    padding: 3px;
+}
+
+.people-list {
+  width: 272px;
+  float: left;
+  height: 100%;
+  overflow: auto;
+    
+    .search {
+      padding: 20px;
+    }
+    
+    input {
+      border-radius: 3px;
+      border: none;
+      padding: 14px;
+      color: white;
+      background: #6A6C75;
+      width: 90%;
+      font-size: 14px;
+    }
+    
+    .fa-search {
+      position: relative;
+      left: -25px;
+    }
+    
+    ul {
+      padding: 20px;
+      height: 770px;
+   
+      
+      
+      
+      li {
+        padding-bottom: 40px;
+      }
+    }
+    
+    img {
+      float: left;
+      height: 35px;
+    }
+    
+    .about {
+      float: left;
+      margin-top: 0;
+    }
+    
+    .about {
+      padding-left: 8px;
+    }
+    
+    .status {
+      color: gray;
+    }
+    .name{
+      color: antiquewhite;
+    }
+    
+  }
