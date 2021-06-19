@@ -57,6 +57,7 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
+              "baseHref": "https://prashiln79.github.io/VSPLus/",
               "outputHashing": "all"
             },
             "development": {
