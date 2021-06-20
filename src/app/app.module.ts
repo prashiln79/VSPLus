@@ -19,6 +19,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { MatInputModule } from '@angular/material/input';
 import { FloatingCtrlComponent } from './components/floating-ctrl/floating-ctrl.component';
 import { TerminalComponent } from './components/terminal/terminal.component';
+import { StoreModule } from '@ngrx/store';
+import { reducers, metaReducers } from './reducers';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
+import { EffectsModule } from '@ngrx/effects';
+import { BranchDetailsEffects } from './effects/branch-details.effects';
 
 @NgModule({
   declarations: [
@@ -32,6 +38,7 @@ import { TerminalComponent } from './components/terminal/terminal.component';
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     AppRoutingModule,
     FormsModule,
     MonacoEditorModule.forRoot(),
@@ -42,7 +49,10 @@ import { TerminalComponent } from './components/terminal/terminal.component';
     MatCardModule,
     MatDividerModule,
     HttpClientModule,
-    MatInputModule
+    MatInputModule,
+    StoreModule.forRoot(reducers, { metaReducers }),
+    !environment.production ? StoreDevtoolsModule.instrument() : [],
+    EffectsModule.forRoot([BranchDetailsEffects]),
   ],
   providers: [],
   bootstrap: [AppComponent]
