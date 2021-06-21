@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { updatedBranchCommitList, updatedBranchTree, updatedBranchTreeUrl, updatedBranchURL, updatedFileList, updateSubFileList } from '../action/branch-details.actions';
+import { updatedBranchCommitList, updatedBranchTreeUrl, updatedBranchURL, updatedFileList, updateSubFileList } from '../action/branch-details.actions';
 import { map, mergeMap, catchError, withLatestFrom } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -31,7 +31,7 @@ export class BranchDetailsEffects {
       ofType(updatedBranchTreeUrl.type),
       mergeMap((payLoad: any) => this.httpClient.get(payLoad.url)
         .pipe(
-          map(data => (updatedBranchTree(data))),
+          map((data: any) => (updatedFileList({ tree: data.tree }))),
           catchError(() => of({ type: '[BranchCommitDetails]  BranchCommitDetails Failure' }))
         )
       )
@@ -39,28 +39,35 @@ export class BranchDetailsEffects {
   );
 
   updateSubtree$ = createEffect(() =>
-  this.actions$.pipe(
-    ofType(updateSubFileList.type),
-    mergeMap((payLoad: any) => this.httpClient.get(payLoad.url)
-      .pipe(
-        withLatestFrom(this.store.select(state => (state.branchDetails.filesList))),
-        map((data:any) => {
-          let newList = [];
-          for(let k in data[1]){
-            if(data[1][k].sha && data[1][k].sha == data[0].sha){
-                       newList.push(Object.assign({},data[1][k],{'children':data[0]})  );
-            }else{
-                   newList.push(  data[1][k]);
-               }
-           
-           }
-          return updatedFileList(newList);
-        }),
-        catchError(() => of({ type: '[BranchCommitDetails]  BranchCommitDetails Failure' }))
+    this.actions$.pipe(
+      ofType(updateSubFileList.type),
+      mergeMap((payLoad: any) => this.httpClient.get(payLoad.url)
+        .pipe(
+          withLatestFrom(this.store.select(state => ({ filesList: state.branchDetails.filesList, path: payLoad.path }))),
+          map((data: any) => {
+            let newList = (data[1]['filesList']).filter((elem:any)=>{
+
+              if(elem.path != data[1]['path'] ){
+                return true;
+              }else{
+                return false;
+              }
+            });
+
+            for (let k in data[0]['tree']) {
+              let elem = data[0]['tree'][k]
+              elem['path'] = data[1]['path'] + '/' + data[0]['tree'][k]['path']
+              newList = newList.concat([elem]);
+            }
+
+            // }
+            return updatedFileList({ tree: newList });
+          }),
+          catchError(() => of({ type: '[BranchCommitDetails]  BranchCommitDetails Failure' }))
+        )
       )
     )
-  )
-);
+  );
 
   constructor(private actions$: Actions, private httpClient: HttpClient, private store: Store<State>) {
 

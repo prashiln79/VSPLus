@@ -62,6 +62,7 @@ export class FileNavigatorComponent implements OnInit {
     dataSource = new MatTreeNestedDataSource<FoodNode>();
     fileStructList: any = [];
     URL: String = '';
+    pathList: Array<any> = [];
 
     constructor(public httpClient: HttpClient, private store: Store<State>) {
     }
@@ -72,7 +73,7 @@ export class FileNavigatorComponent implements OnInit {
         this.URL = 'https://api.github.com/repos/prashiln79/TAU';
         this.store.dispatch(updatedBranchURL({ url: this.URL }));
         this.getBranchTreeUrl();
-        this.getBranchTree();
+      //  this.getBranchTree();
         this.getFileStructList();
 
 
@@ -258,43 +259,55 @@ export class FileNavigatorComponent implements OnInit {
             });
     }
 
-    getBranchTree() {
-        this.store.select(state => (state.branchDetails.tree))
-            .subscribe((data: Array<any>) => {
-                if (data && data.length > 1) {
-                    this.store.dispatch(updatedFileList(data));
-                    this.checkIfsubTreeIsPresent(data);
-                }
-            });
-    }
+    // getBranchTree() {
+    //     this.store.select(state => (state.branchDetails.tree))
+    //         .subscribe((data: Array<any>) => {
+    //             if (data && data.length > 1) {
+    //                 this.store.dispatch(updatedFileList(data));
+    //             }
+    //         });
+    // }
 
 
     checkIfsubTreeIsPresent(tree: Array<any>) {
+        let checkSubTree = false;
         tree.forEach((items, index) => {
             if (items.type == 'tree') {
-                this.store.dispatch(updateSubFileList({ url: items.url,path:items.path }));
+                checkSubTree = true;
+                if(this.pathList.indexOf(items.path) == -1){
+                    this.pathList.push(items.path);
+                    this.store.dispatch(updateSubFileList({ url: items.url,path:items.path }));
+                }
             }
+            
         });
+        if(!checkSubTree){
+            this.addFileListToTree(tree);
+        }
     }
 
-    getSubTree(url: String, path: any) {
-
-        
-
-        
-        // this.httpClient.get(url.toString()).subscribe((data:any)=>{
-        //     this.fileStructList[path] = data.tree;
-        //     this.store.dispatch(updatedFileList(this.fileStructList));
-        // },(err)=>{
-        //     console.log(err);
-        // });
+    addFileListToTree(tree:Array<any>){
+        let finalTree =[];
+        for(let i of tree){
+            if(i.path.indexOf('/')== -1){
+                finalTree.push([{name:i.path}])
+            }else{ //e2e/src/app.e2e-spec.ts
+                // let path = i.path.split('/');
+                // let pathObj = finalTree;
+                // for(let i =0;i<=path.length;i++){
+                //     pathObj[path[i]] = {'childer':''};
+                //     pathObj[path[i]] = pathObj[path[i]]
+                }
+            }
+        }
     }
 
     getFileStructList(){
         this.store.select(state => (state.branchDetails.filesList))
             .subscribe((data: Array<any>) => {
-                if (data) {
+                if (data && data.length > 1) {
                     this.fileStructList = data
+                    this.checkIfsubTreeIsPresent(data);
                 }
             });
     }

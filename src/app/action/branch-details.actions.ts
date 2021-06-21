@@ -8,10 +8,6 @@ export const updatedBranchTreeUrl = createAction(
   '[updatedBranchTreeUrl]  BranchDetails',props<{url:String}>()
 );
 
-export const updatedBranchTree = createAction(
-  '[updatedBranchTree]  BranchDetails',props<any>()
-);
-
 export const updatedFileList = createAction(
   '[updatedBranchFileList]  BranchDetails',props<any>()
 );
