@@ -5,50 +5,13 @@ import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { Store } from '@ngrx/store';
 import { updatedBranchTreeUrl, updatedBranchURL, updatedFileList, updateSubFileList } from 'src/app/action/branch-details.actions';
 import { State } from 'src/app/reducers';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
-
-
-/**
- * Food data with nested structure.
- * Each node has a name and an optional list of children.
- */
 interface FoodNode {
     name: string;
     children?: FoodNode[];
 }
-
-const TREE_DATA: FoodNode[] = [
-    {
-        name: 'src',
-        children: [
-            { name: 'app.component.ts' },
-            { name: 'app.component.html' },
-            { name: 'app-routing.module.ts' },
-        ]
-    }, {
-        name: 'app',
-        children: [
-            {
-                name: 'assets',
-                children: [
-                    { name: 'Broccoli' },
-                    { name: 'Brussels sprouts' },
-                ]
-            }, {
-                name: 'environments',
-                children: [
-                    { name: 'Pumpkins' },
-                    { name: 'Carrots' },
-                ]
-            },
-        ]
-    },
-];
-
-/**
- * @title Tree with nested nodes
- */
 
 @Component({
     selector: 'app-file-navigator',
@@ -57,159 +20,87 @@ const TREE_DATA: FoodNode[] = [
 })
 export class FileNavigatorComponent implements OnInit {
 
-    public url: string = 'https://github.com/prashiln79/TAU';
+    public url: string = '';
+    public apiUrl = '';
     treeControl = new NestedTreeControl<FoodNode>(node => node.children);
     dataSource = new MatTreeNestedDataSource<FoodNode>();
     fileStructList: any = [];
-    URL: String = '';
     pathList: Array<any> = [];
+    position: number = 0;
 
-    constructor(public httpClient: HttpClient, private store: Store<State>) {
+    constructor(public httpClient: HttpClient, private store: Store<State>, private _snackBar: MatSnackBar) {
     }
 
     hasChild = (_: number, node: FoodNode) => !!node.children && node.children.length > 0;
 
     ngOnInit(): void {
-        this.URL = 'https://api.github.com/repos/prashiln79/TAU';
-        this.store.dispatch(updatedBranchURL({ url: this.URL }));
         this.getBranchTreeUrl();
-      //  this.getBranchTree();
         this.getFileStructList();
+    }
 
 
-
-
-        let data = [
-            {
-                "name": ".browserslistrc",
-                "url": 'test'
-            },
-            {
-                "name": ".editorconfig"
-            },
-            {
-                "name": ".gitignore"
-            },
-            {
-                "name": "LICENSE"
-            },
-            {
-                "name": "README.md"
-            },
-            {
-                "name": "angular.json"
-            },
-            {
-                "name": "e2e",
-                "children": [
-                    {
-                        "name": "protractor.conf.js"
-                    },
-                    {
-                        "name": "src",
-                        "children": [
-                            {
-                                "name": "app.e2e-spec.ts"
-                            },
-                            {
-                                "name": "app.po.ts"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "tsconfig.json"
-                    }
-                ]
-            },
-            {
-                "name": "karma.conf.js"
-            },
-            {
-                "name": "package-lock.json"
-            },
-            {
-                "name": "package.json"
-            },
-            {
-                "name": "src",
-                "children": [
-                    {
-                        "name": "app",
-                        "children": [
-                            {
-                                "name": "app-routing.module.ts"
-                            },
-                            {
-                                "name": "app.component.html"
-                            },
-                            {
-                                "name": "app.component.scss"
-                            },
-                            {
-                                "name": "app.component.spec.ts"
-                            },
-                            {
-                                "name": "app.component.ts"
-                            },
-                            {
-                                "name": "app.module.ts"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "assets",
-                        "children": [
-                            {
-                                "name": ".gitkeep"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "environments",
-                        "children": [
-                            {
-                                "name": "environment.prod.ts"
-                            },
-                            {
-                                "name": "environment.ts"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "favicon.ico"
-                    },
-                    {
-                        "name": "index.html"
-                    },
-                    {
-                        "name": "main.ts"
-                    },
-                    {
-                        "name": "polyfills.ts"
-                    },
-                    {
-                        "name": "styles.scss"
-                    },
-                    {
-                        "name": "test.ts"
-                    }
-                ]
-            },
-            {
-                "name": "tsconfig.app.json"
-            },
-            {
-                "name": "tsconfig.json"
-            },
-            {
-                "name": "tsconfig.spec.json"
-            },
-            {
-                "name": "tslint.json"
+    search() {
+        this.apiUrl = '';
+        try {
+            let user = (this.url.split('github.com/')[1]).split('/')[0];
+            let repository = (this.url.split('github.com/')[1]).split('/')[1];
+            this.apiUrl = 'https://api.github.com/repos/' + user + '/' + repository;
+            if (repository && user) {
+                this.store.dispatch(updatedBranchURL({ url: this.apiUrl }));
             }
-        ]
+            else {
+                throw 'error'
+            }
 
-        data.sort((a, b) => {
+        } catch (e) {
+            this._snackBar.open('Invalid URL', 'close');
+            this.apiUrl = '';
+        }
+
+    }
+
+    getBranchTreeUrl() {
+        this.store.select(state => (state.branchDetails.commits))
+            .subscribe((data: any) => {
+                if (data && data[0] && data[0].sha) {
+                    this.store.dispatch(updatedBranchTreeUrl({ url: this.apiUrl + '/git/trees/' + data[0].sha }));
+                }
+            });
+    }
+
+
+
+    checkIfsubTreeIsPresent(tree: Array<any>) {
+        let checkSubTree = false;
+        tree.forEach((items, index) => {
+            if (items.type == 'tree') {
+                checkSubTree = true;
+                if (this.pathList.indexOf(items.path) == -1) {
+                    this.pathList.push(items.path);
+                    this.store.dispatch(updateSubFileList({ url: items.url, path: items.path }));
+                }
+            }
+
+        });
+        if (!checkSubTree) {
+            this.addFileListToTree(tree);
+        }
+    }
+
+    addFileListToTree(tree: Array<any>) {
+        let finalTree: any = [];
+        let subtree = [];
+        for (let i in tree) {
+            this.position = 0;
+            if (tree[i].path.indexOf('/') > -1) {
+
+                this.addFile(tree[i].path, finalTree);
+            } else {
+                finalTree.push({ 'name': tree[i].path });
+            }
+
+        }
+        finalTree.sort((a: any, b: any) => {
 
             if (a.children && b.children) {
                 return 0;
@@ -222,87 +113,74 @@ export class FileNavigatorComponent implements OnInit {
             }
         });
 
-        this.dataSource.data = data;
+        this.dataSource.data = finalTree;
+
     }
 
+    addFile(path: String, finalTree: any) {
 
-    // getFileTree(url: string, array: any, children: boolean) {
-
-    //     this.httpClient.get(url).subscribe((data: any) => {
-    //         if (data && data.tree) {
-    //             data.tree.forEach((element: any, index: any) => {
-    //                 array.push({ 'name': element.path });
-    //                 if (element.type == "tree") {
-    //                     this.getFileTree(element.url, [Object.assign(array[index], { children: [] })], true);
-    //                 }
-    //             });
-
-    //         }
-    //         this.store.dispatch(updatedBranchFileList(this.tree));
-
-    //     });
-
-    // }
-
-    search() {
-        console.log(this.url)
-    }
-
-
-
-    getBranchTreeUrl() {
-        this.store.select(state => (state.branchDetails.commits))
-            .subscribe((data: any) => {
-                if (data && data[0] && data[0].sha) {
-                    this.store.dispatch(updatedBranchTreeUrl({ url: this.URL + '/git/trees/' + data[0].sha }));
-                }
-            });
-    }
-
-    // getBranchTree() {
-    //     this.store.select(state => (state.branchDetails.tree))
-    //         .subscribe((data: Array<any>) => {
-    //             if (data && data.length > 1) {
-    //                 this.store.dispatch(updatedFileList(data));
-    //             }
-    //         });
-    // }
-
-
-    checkIfsubTreeIsPresent(tree: Array<any>) {
-        let checkSubTree = false;
-        tree.forEach((items, index) => {
-            if (items.type == 'tree') {
-                checkSubTree = true;
-                if(this.pathList.indexOf(items.path) == -1){
-                    this.pathList.push(items.path);
-                    this.store.dispatch(updateSubFileList({ url: items.url,path:items.path }));
-                }
-            }
-            
-        });
-        if(!checkSubTree){
-            this.addFileListToTree(tree);
-        }
-    }
-
-    addFileListToTree(tree:Array<any>){
-        let finalTree =[];
-        for(let i of tree){
-            if(i.path.indexOf('/')== -1){
-                finalTree.push([{name:i.path}])
-            }else{ //e2e/src/app.e2e-spec.ts
-                // let path = i.path.split('/');
-                // let pathObj = finalTree;
-                // for(let i =0;i<=path.length;i++){
-                //     pathObj[path[i]] = {'childer':''};
-                //     pathObj[path[i]] = pathObj[path[i]]
-                }
+        let Object: any;
+        if (path.indexOf('/') > -1) {
+            this.position = 0
+            if (path.split('/').length > 1) {
+                Object = this.getPathObject(path.slice(0, path.lastIndexOf('/')), finalTree)
+            } else {
+                Object = finalTree;
             }
         }
+        else {
+            return path;
+        }
+
+        if (path.indexOf('/') > -1) {
+            if (Object && Object['children'] && path.split('/').length <= 2) {
+                Object['children'].push({ name: path.slice(path.indexOf('/') + 1) });
+            }
+            else if (Object && Object['children'] && ((path.split('/').length - this.position) == 2)) {
+                Object['children'].push({ name: path.slice(path.lastIndexOf('/') + 1) });
+            }
+            else if (Object && Object['children'] && path.split('/').length > 2) {
+                this.addFile(path.slice(path.split('/')[this.position].length + 1), Object);
+            }
+            else if (Object && path.split('/').length >= 2) {
+                Object.push({ name: path.split('/')[this.position], children: [] });
+                this.addFile(path.slice(path.split('/')[this.position].length + 1), Object);
+            }
+            else {
+                finalTree.push({ name: path.slice(0, path.indexOf('/')), children: [{ name: this.addFile(path.slice(path.indexOf('/') + 1), finalTree) }] })
+            }
+        }
+        return
     }
 
-    getFileStructList(){
+    getPathObject(path: any, finalTree: any) {
+        let data = path.split('/')
+        let i = 0;
+        let obj: any = finalTree;
+        while (i < (data.length)) {
+            if (obj && obj.name) {
+                this.position++;
+                obj = this.getPathObject(data[i], obj.children);
+
+            } else {
+
+                obj = finalTree.find((elem: any) => {
+
+                    if (elem.name == data[i]) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+            }
+            i++;
+        }
+        return obj || finalTree;
+
+    }
+
+
+    getFileStructList() {
         this.store.select(state => (state.branchDetails.filesList))
             .subscribe((data: Array<any>) => {
                 if (data && data.length > 1) {
