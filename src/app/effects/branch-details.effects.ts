@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { updatedBranchCommitList, updatedBranchTreeUrl, updatedBranchURL, updatedFileList, updateSubFileList } from '../action/branch-details.actions';
+import { BranchCommitDetailsFailure, subBranchFileListFailure, updatedBranchCommitList, updatedBranchTreeUrl, updatedBranchURL, updatedFileList, updateSubFileList } from '../action/branch-details.actions';
 import { map, mergeMap, catchError, withLatestFrom } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -20,7 +20,7 @@ export class BranchDetailsEffects {
       mergeMap((payLoad: any) => this.httpClient.get(payLoad.url + '/commits')
         .pipe(
           map(data => (updatedBranchCommitList(data))),
-          catchError(() => of({ type: '[BranchCommitDetails]  BranchCommitDetails Failure' }))
+          catchError((error) => of( BranchCommitDetailsFailure()))
         )
       )
     )
@@ -32,7 +32,7 @@ export class BranchDetailsEffects {
       mergeMap((payLoad: any) => this.httpClient.get(payLoad.url)
         .pipe(
           map((data: any) => (updatedFileList({ tree: data.tree }))),
-          catchError(() => of({ type: '[BranchCommitDetails]  BranchCommitDetails Failure' }))
+          catchError((error) => of(BranchCommitDetailsFailure()))
         )
       )
     )
@@ -63,7 +63,7 @@ export class BranchDetailsEffects {
             // }
             return updatedFileList({ tree: newList });
           }),
-          catchError(() => of({ type: '[BranchCommitDetails]  BranchCommitDetails Failure' }))
+          catchError((error) => of(subBranchFileListFailure))
         )
       )
     )

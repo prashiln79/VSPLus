@@ -17,13 +17,15 @@ export const updatedBranchCommitList = createAction(
 );
 
 export const BranchCommitDetailsFailure = createAction(
-  '[BranchCommitDetails]  BranchDetails Failure',
-  props<{ error: any }>()
+  '[BranchCommitDetails]  BranchDetails Failure'
 );
 
 export const updateSubFileList = createAction(
   '[updateSubFileList]  BranchDetails',props<any>()
 );
 
+export const subBranchFileListFailure = createAction(
+  '[subBranchFileListFailure]  BranchDetails Failure'
+);
 
 

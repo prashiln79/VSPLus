@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { Store } from '@ngrx/store';
-import { updatedBranchTreeUrl, updatedBranchURL, updatedFileList, updateSubFileList } from 'src/app/action/branch-details.actions';
+import { updatedBranchTreeUrl, updatedBranchURL, updateSubFileList } from 'src/app/action/branch-details.actions';
 import { State } from 'src/app/reducers';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -36,6 +36,138 @@ export class FileNavigatorComponent implements OnInit {
     ngOnInit(): void {
         this.getBranchTreeUrl();
         this.getFileStructList();
+
+        let demoData = [
+            {
+                "name": ".browserslistrc",
+                "url":'test'
+            },
+            {
+                "name": ".editorconfig"
+            },
+            {
+                "name": ".gitignore"
+            },
+            {
+                "name": "LICENSE"
+            },
+            {
+                "name": "README.md"
+            },
+            {
+                "name": "angular.json"
+            },
+            {
+                "name": "e2e",
+                "children": [
+                    {
+                        "name": "protractor.conf.js"
+                    },
+                    {
+                        "name": "src",
+                        "children": [
+                            {
+                                "name": "app.e2e-spec.ts"
+                            },
+                            {
+                                "name": "app.po.ts"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "tsconfig.json"
+                    }
+                ]
+            },
+            {
+                "name": "karma.conf.js"
+            },
+            {
+                "name": "package-lock.json"
+            },
+            {
+                "name": "package.json"
+            },
+            {
+                "name": "src",
+                "children": [
+                    {
+                        "name": "app",
+                        "children": [
+                            {
+                                "name": "app-routing.module.ts"
+                            },
+                            {
+                                "name": "app.component.html"
+                            },
+                            {
+                                "name": "app.component.scss"
+                            },
+                            {
+                                "name": "app.component.spec.ts"
+                            },
+                            {
+                                "name": "app.component.ts"
+                            },
+                            {
+                                "name": "app.module.ts"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "assets",
+                        "children": [
+                            {
+                                "name": ".gitkeep"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "environments",
+                        "children": [
+                            {
+                                "name": "environment.prod.ts"
+                            },
+                            {
+                                "name": "environment.ts"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "favicon.ico"
+                    },
+                    {
+                        "name": "index.html"
+                    },
+                    {
+                        "name": "main.ts"
+                    },
+                    {
+                        "name": "polyfills.ts"
+                    },
+                    {
+                        "name": "styles.scss"
+                    },
+                    {
+                        "name": "test.ts"
+                    }
+                ]
+            },
+            {
+                "name": "tsconfig.app.json"
+            },
+            {
+                "name": "tsconfig.json"
+            },
+            {
+                "name": "tsconfig.spec.json"
+            },
+            {
+                "name": "tslint.json"
+            }
+        ];
+        
+        this.dataSource.data = this.sortFiles(demoData);
     }
 
 
@@ -100,7 +232,14 @@ export class FileNavigatorComponent implements OnInit {
             }
 
         }
-        finalTree.sort((a: any, b: any) => {
+     
+
+        this.dataSource.data = this.sortFiles(finalTree);
+
+    }
+
+    sortFiles(list:any){
+        list.sort((a: any, b: any) => {
 
             if (a.children && b.children) {
                 return 0;
@@ -112,9 +251,7 @@ export class FileNavigatorComponent implements OnInit {
                 return 0;
             }
         });
-
-        this.dataSource.data = finalTree;
-
+        return list;
     }
 
     addFile(path: String, finalTree: any) {
@@ -186,6 +323,17 @@ export class FileNavigatorComponent implements OnInit {
                 if (data && data.length > 1) {
                     this.fileStructList = data
                     this.checkIfsubTreeIsPresent(data);
+                }
+            });
+        this.checkTreeFailur();
+    }
+
+    checkTreeFailur() {
+        this.store.select(state => (state.branchDetails.subBranchRetrievalFailure))
+            .subscribe((data: any) => {
+                if(data){
+                    this._snackBar.open('Fail to load files', 'close');
+                    this.addFileListToTree(this.fileStructList);
                 }
             });
     }

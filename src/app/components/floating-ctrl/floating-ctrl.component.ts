@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { runCode } from 'src/app/action/code.actions';
+import { State } from 'src/app/reducers';
 
 @Component({
   selector: 'app-floating-ctrl',
@@ -7,9 +10,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FloatingCtrlComponent implements OnInit {
 
-  constructor() { }
+  constructor(private store: Store<State>) { }
 
   ngOnInit(): void {
+
+
+  }
+
+  run(){
+    this.store.dispatch(runCode());
   }
 
 }
