@@ -31,7 +31,9 @@ export class CodeEditorComponent implements OnInit {
           }catch(e){
             output = e.toString();
           }
-          this.store.dispatch(UpdateTerminalOutput({ payLoad: output.toString()}));
+          if(output){
+            this.store.dispatch(UpdateTerminalOutput({ payLoad: output.toString()}));
+          }
           this.store.dispatch(stopCode());
         }
       });
