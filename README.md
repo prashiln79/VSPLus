@@ -7,6 +7,10 @@ VSPlus is an open-source application for ready-to-code development environments 
 ![Untitled](https://user-images.githubusercontent.com/22612608/123532195-d52b9900-d728-11eb-8a0a-2b89406b23b1.png)
 
 
+<h2>Check Demo</h2>
+https://prashiln79.github.io/VSPLus/
+
+
 Here's why:
 * Your time should be focused on creating something amazing. A project that solves a problem and helps others
 * You shouldn't be doing the same tasks over and over like creating a README from scratch
@@ -24,7 +28,3 @@ This section should list any major frameworks that you built your project using.
 * Monaco Editor
 
 
-
-<h1>Check Demo</h1>
-
-https://prashiln79.github.io/VSPLus/
