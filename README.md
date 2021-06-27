@@ -2,7 +2,10 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-There are many great README templates available on GitHub, however, I didn't find one that really suit my needs so I created this enhanced one. I want to create a README template so amazing that it'll be the last one you ever need -- I think this is it.
+VSPlus is an open-source application for ready-to-code development environments + Project Management Software from your browser.
+
+![Untitled](https://user-images.githubusercontent.com/22612608/123532195-d52b9900-d728-11eb-8a0a-2b89406b23b1.png)
+
 
 Here's why:
 * Your time should be focused on creating something amazing. A project that solves a problem and helps others
