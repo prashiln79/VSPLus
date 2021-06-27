@@ -1,5 +1,7 @@
 {
     "recommendations": [
-        "eamodio.gitlens"
+        "myml.vscode-markdown-plantuml-preview",
+        "esbenp.prettier-vscode",
+        "jebbs.plantuml"
     ]
 }
